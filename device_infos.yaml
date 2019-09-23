@@ -3,8 +3,22 @@
   password: cisco
   connection_address: 10.3.255.106
   as_number: 6
+<<<<<<< HEAD
+=======
+  bgp_neighbor: 
+  bgp_networks:
+    - 
+  hostname: RT-6
+>>>>>>> 737f53736d04f350c7ad2336008fa06186b4e850
   loopback:
     - 6.6.6.6/32
     - 192.168.6.0/24
   ospf_area: 
     - 0
+<<<<<<< HEAD
+=======
+  ospf_networks:
+    - 
+  
+    
+>>>>>>> 737f53736d04f350c7ad2336008fa06186b4e850
