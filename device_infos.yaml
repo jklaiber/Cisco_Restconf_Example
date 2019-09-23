@@ -1,3 +1,12 @@
 - username: python
   password: cisco
   connection_address: 10.3.255.106
+  as_number: 6
+  hostname: RT-6
+  loopback:
+    - 6.6.6.6/32
+    - 192.168.6.0/24
+  ospf_area: 
+    - 0
+  
+    
