@@ -1,0 +1,42 @@
+<interface>
+    <GigabitEthernet>
+        <name>1</name>
+        <description>RESTful API Interface</description>
+        <ip>
+            <address>
+                <primary>
+                    <address>10.3.255.106</address>
+                    <mask>255.255.255.0</mask>
+                </primary>
+            </address>
+        </ip>
+        <mop>
+            <enabled>false</enabled>
+        </mop>
+        <negotiation xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-ethernet">
+            <auto>true</auto>
+        </negotiation>
+    </GigabitEthernet>
+    <Loopback>
+        <name>0</name>
+        <ip>
+            <address>
+                <primary>
+                    <address>6.6.6.6</address>
+                    <mask>255.255.255.255</mask>
+                </primary>
+            </address>
+        </ip>
+    </Loopback>
+    <Loopback>
+        <name>1</name>
+        <ip>
+            <address>
+                <primary>
+                    <address>192.168.6.1</address>
+                    <mask>255.255.255.0</mask>
+                </primary>
+            </address>
+        </ip>
+    </Loopback>
+</interface>
