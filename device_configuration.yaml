@@ -16,14 +16,16 @@ interfaces:
     ospf: area 0
 
 ospf: 
-  - process_id: 6
+  - process_id: 1
   - router_id: 6.6.6.6
   - area: 0
 
 bgp:
   - as_number: 6
+  - bgp_neighbor: 20.20.20.20
+  - remote_as: 20
   - multihop_count: 2
-  - source_update: lo0
+  - source: lo0
 
 
 
