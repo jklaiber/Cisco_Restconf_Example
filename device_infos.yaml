@@ -2,17 +2,34 @@
   username: python
   password: cisco
   connection_address: 10.3.255.106
-  as_number: 6
-  bgp_neighbor: 
-  bgp_networks:
-    - 
-  hostname: RT-6
-  loopback:
-    - 6.6.6.6/32
-    - 192.168.6.0/24
-  ospf_area: 
-    - 0
-  ospf_networks:
-    - 
-  
-    
+  interfaces:
+    - name: 1
+      ip: 10.3.255.106
+      mask: 255.255.255.0
+      loopback: false
+    - name: 0
+      ip: 6.6.6.6
+      mask: 255.255.255.255
+      loopback: true
+    - name: 1
+      ip: 192.168.6.1
+      mask: 255.255.255.0
+      loopback: true
+  ospf: 
+    - process_id: 1
+    - areas:
+      - 0:
+        - networks:
+          - 6.6.6.6: 0.0.0.0
+          - 192.168.6.0: 0.0.0.255
+          - 10.3.255.0: 0.0.0.255
+    - router_id: 6.6.6.6
+  bgp:
+    - as_number: 6
+    - networks:
+      - 192.168.6.0 
+    - neighbors:
+        - 20.20.20.20:
+          remote_as: 20
+          multihop_count: 2
+          source: lo0

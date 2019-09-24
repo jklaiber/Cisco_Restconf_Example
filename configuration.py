@@ -29,20 +29,33 @@ def get_hostname(host: dict) -> str:
         password=host['password'])
     return response
 
+'''
 def set_config(host: dict) -> str:
-    response = restconf_helpers.RestconfRequestHelper().put(
-       url=f'https://{host["connection_address"]}/restconf/data/Cisco-IOS-XE-native:native/'
+    response = restconf_helpers.RestconfRequestHelper().patch(
+       url=f'https://{host["connection_address"]}/restconf/data/Cisco-IOS-XE-native:native/',
         username=host['username'],
-        password=host['password'])       
-    )
+        password=host['password'])  
+'''
+
+def set_hostname(host: dict) -> str:
+    test_string = '<hostname xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-native"  xmlns:ios="http://cisco.com/ns/yang/Cisco-IOS-XE-native">test</hostname>'
+    response = restconf_helpers.RestconfRequestHelper().patch(
+        url=f'https://{host["connection_address"]}/restconf/data/Cisco-IOS-XE-native:native/hostname/',
+        username=host['username'],
+        password=host['password'],
+        data=test_string)
+    return response
 
 
 def main():
     devices = load_devices() 
     for device in devices:
         logger.info
-        logger.info(f'Getting information for device {device}')
-        get_hostname(host=device)
+        logger.info(f'Device Information: {device}')
+        logger.info(f'Getting information for device {device["hostname"]}')
+        response = set_hostname(device)
+        print(response)
+
 
 if __name__ == '__main__':
     init_logger()
