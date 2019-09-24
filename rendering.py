@@ -1,11 +1,13 @@
-import os
 import yaml
 from jinja2 import Environment, FileSystemLoader
 
-config_data = yaml.load(open('./device_infos.yaml'))
-env = Environment(loader = FileSystemLoader('./templates'),
+config_data = yaml.load(open('./test.yaml'))
+
+env = Environment(loader = FileSystemLoader('.'),
     trim_blocks=True,
     lstrip_blocks=True
-    template = env.get_template('template.j2')
-    print(template.render(config_data))
 )
+
+template = env.get_template('test.j2')
+
+print(template.render(config_data))
