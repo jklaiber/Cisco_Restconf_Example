@@ -1,0 +1,97 @@
+<native xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-native"  xmlns:ios="http://cisco.com/ns/yang/Cisco-IOS-XE-native">
+<hostname>
+{{ hostname }}
+</hostname>
+<interface>
+{% for interface in interfaces %}
+{% if interface.loopback %}
+<Loopback>
+{% else %}
+<GigabitEthernet>
+{% endif %}
+<name>{{ interface.name }}</name>
+<description>RESTful API Interface</description>
+<ip>
+<address>
+<primary>
+<address>{{ interface.ip }}</address>
+<mask>{{ interface.mask }}</mask>
+</primary>
+</address>
+</ip>
+{% if interface.loopback %}
+</Loopback>
+{% else %}
+</GigabitEthernet>
+{% endif %}
+{% endfor %}
+</interface>
+<router>
+{% if bgp is defined %}
+<bgp xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-bgp">
+<id>{{ bgp.as_number }}</id>
+{% for neighbor in bgp.neighbors %}
+<neighbor>
+<id>{{ neighbor.address }}</id>
+<remote-as>{{ neighbor.remote_as }}</remote-as>
+{% if neighbor.multihop_count is defined %}
+<ebgp-multihop>
+<max-hop>{{ neighbor.multihop_count }}</max-hop>
+</ebgp-multihop>
+{% endif %}
+{% if neighbor.source is defined %}
+<update-source>
+{% if update_source.loopback %}
+<Loopback>
+{% else %}
+<GigabitEthernet>
+{% endif %}
+{{ update_source.id }}
+{%if update_source.loopback %}
+</Loopback>
+{% else %}
+</GigabitEthernet>
+{% endif %}
+</update-source>
+{% endif %}
+</neighbor>
+{% endfor %}
+{% for network in bgp.networks %}
+{% for ip,mask in network.items() %}
+<network>
+<number>192.168.6.0</number>
+<mask>255.255.255.0</mask>
+</network>
+{% endfor %}
+{% endfor %}
+</bgp>
+{% endif %}
+{% if ospf is defined %}
+<ospf xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-ospf">
+<id>{{ ospf.process_id }}</id>
+{% if ospf.passive_interfaces is defined %}
+<passive-interface>
+{% endif %}
+{% for passive_interface in ospf.passive_interfaces %}
+<interface>{{ passive_interface }}</interface>
+{% endfor %}
+{% if ospf.passive_interfaces %}
+</passive-interface>
+{% endif %}
+<router-id>{{ ospf.router_id }}</router-id>
+{% for area in ospf.areas %}
+{% for network in area.networks %}
+{% for ip,mask in network.items() %}
+<network>
+<ip>{{ ip }}</ip>
+<mask>{{ mask }}</mask>
+<area>{{ area.area_id }}</area>
+</network>
+{% endfor %}
+{% endfor %}
+{% endfor %}
+</ospf>
+{% endif %}
+</router>
+</native>
+

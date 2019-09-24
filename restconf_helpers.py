@@ -48,6 +48,7 @@ class RestconfRequestHelper:
         logger.debug(f'Got response from {url} with code {response.status_code} and content \n {response.text}')
         response.raise_for_status()
         return response.text
+
     def patch(self, url: str, username: str, password: str,
             data: str,
             restconf_format: Optional[RestconfFormat] = RestconfFormat.XML,

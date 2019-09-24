@@ -1,13 +1,19 @@
 import yaml
 from jinja2 import Environment, FileSystemLoader
 
-config_data = yaml.load(open('./test.yaml'))
 
-env = Environment(loader = FileSystemLoader('.'),
-    trim_blocks=True,
-    lstrip_blocks=True
-)
 
-template = env.get_template('test.j2')
+class RenderJinjaTemplate:
 
-print(template.render(config_data))
+    def rendering(self, config_data: dict):
+        # config_data = yaml.load(open('./test.yaml'))
+        
+        env = Environment(loader = FileSystemLoader('./template'),
+            trim_blocks=True,
+            lstrip_blocks=True
+        )
+
+        template = env.get_template('default_template.xml')
+
+        rendereddata = template.render(config_data)
+        return rendereddata

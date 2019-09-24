@@ -16,20 +16,24 @@
       mask: 255.255.255.0
       loopback: true
   ospf: 
-    - process_id: 1
-    - areas:
-      - 0:
-        - networks:
-          - 6.6.6.6: 0.0.0.0
-          - 192.168.6.0: 0.0.0.255
-          - 10.3.255.0: 0.0.0.255
-    - router_id: 6.6.6.6
+    process_id: 1
+    areas:
+    - area_id: 0
+      networks:
+      - 6.6.6.6: 0.0.0.0
+      - 192.168.6.0: 0.0.0.255
+      - 10.3.255.0: 0.0.0.255
+    router_id: 6.6.6.6
+    passive_interfaces:
+    - lo1
   bgp:
-    - as_number: 6
-    - networks:
-      - 192.168.6.0 
-    - neighbors:
-        - 20.20.20.20:
-          remote_as: 20
-          multihop_count: 2
-          source: lo0
+    as_number: 6
+    networks:
+    - 192.168.6.0: 255.255.255.0 
+    neighbors:
+    - address: 20.20.20.20
+      remote_as: 20
+      multihop_count: 2
+      update_source:
+        loopback: true
+        id: 1

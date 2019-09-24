@@ -5,6 +5,7 @@ import requests
 import yaml
 
 import restconf_helpers
+import rendering
 
 requests.packages.urllib3.disable_warnings()
 logger = logging.getLogger('restconf.example')
@@ -29,14 +30,6 @@ def get_hostname(host: dict) -> str:
         password=host['password'])
     return response
 
-'''
-def set_config(host: dict) -> str:
-    response = restconf_helpers.RestconfRequestHelper().patch(
-       url=f'https://{host["connection_address"]}/restconf/data/Cisco-IOS-XE-native:native/',
-        username=host['username'],
-        password=host['password'])  
-'''
-
 def set_hostname(host: dict) -> str:
     test_string = '<hostname xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-native"  xmlns:ios="http://cisco.com/ns/yang/Cisco-IOS-XE-native">test</hostname>'
     response = restconf_helpers.RestconfRequestHelper().patch(
@@ -46,6 +39,19 @@ def set_hostname(host: dict) -> str:
         data=test_string)
     return response
 
+def patch_configuration(host: dict) -> str:
+    rendering_data = rendering.RenderJinjaTemplate().rendering(host)
+    rendering_data = rendering_data.replace('\n', '')
+    
+    print(rendering_data)
+    response = restconf_helpers.RestconfRequestHelper().patch(
+        url=f'https://{host["connection_address"]}/restconf/data/Cisco-IOS-XE-native:native/',
+        username=host['username'],
+        password=host['password'],
+        data=rendering_data)
+    print(rendering_data)
+    return response
+
 
 def main():
     devices = load_devices() 
@@ -53,7 +59,7 @@ def main():
         logger.info
         logger.info(f'Device Information: {device}')
         logger.info(f'Getting information for device {device["hostname"]}')
-        response = set_hostname(device)
+        response = patch_configuration(device)
         print(response)
 
 
