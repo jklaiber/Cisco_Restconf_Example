@@ -1,9 +1,7 @@
 import logging
 from typing import List
-
 import requests
 import yaml
-
 import restconf_helpers
 import rendering
 
@@ -42,7 +40,6 @@ def patch_configuration(host: dict) -> str:
         data=rendered_xml_data)
     return response
 
-
 def main():
     devices = load_devices() 
     for device in devices:
@@ -51,7 +48,6 @@ def main():
         logger.info(f'Getting information for device {device["hostname"]}')
         response = patch_configuration(device)
         print(response)
-
 
 if __name__ == '__main__':
     init_logger()
