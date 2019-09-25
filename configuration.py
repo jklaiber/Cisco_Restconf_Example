@@ -30,6 +30,7 @@ def get_hostname(host: dict) -> str:
 
 def patch_configuration(host: dict) -> str:
     rendering_data = rendering.RenderJinjaTemplate().rendering(host)
+    print(rendering_data)
     rendered_xml_data = rendering.XmlParser().parseXml(rendering_data)
 
     print(rendered_xml_data)
