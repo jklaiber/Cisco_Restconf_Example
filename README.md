@@ -6,13 +6,13 @@ Currently there is only Cisco Native support.
 
 ## Requirements
 ```bash
-$ TODO venv configuration
+$ python3 –m venv path/to/desired/dir
 $ source activate /bin/activate
 $ pip3 install -r requirements.txt
 ```
 
 ## Work with it
-1. Open the device_infos.yaml file
+1. Open the `device_infos.yaml` file
 2. Edit the configuration to your needs
 3. You can add additional bgp neighbors or ospf areas and also interfaces
 4. When you need a additional router then you can also do that (please consider the yaml sintax)
