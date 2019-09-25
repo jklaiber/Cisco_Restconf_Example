@@ -32,16 +32,14 @@ def get_hostname(host: dict) -> str:
 
 def patch_configuration(host: dict) -> str:
     rendering_data = rendering.RenderJinjaTemplate().rendering(host)
-    #rendering_data = rendering_data.replace('\n', '')
-    rendering_data = rendering.XmlParser().parseXml(rendering_data)
+    rendered_xml_data = rendering.XmlParser().parseXml(rendering_data)
 
-    print(rendering_data)
+    print(rendered_xml_data)
     response = restconf_helpers.RestconfRequestHelper().patch(
         url=f'https://{host["connection_address"]}/restconf/data/Cisco-IOS-XE-native:native/',
         username=host['username'],
         password=host['password'],
-        data=rendering_data)
-    print(rendering_data)
+        data=rendered_xml_data)
     return response
 
 
