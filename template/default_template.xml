@@ -39,15 +39,15 @@
                     <max-hop>{{ neighbor.multihop_count }}</max-hop>
                 </ebgp-multihop>
                 {% endif %}
-                {% if neighbor.source is defined %}
+                {% if neighbor.update_source is defined %}
                 <update-source>
-                    {% if update_source.loopback %}
+                    {% if neighbor.update_source.loopback %}
                     <Loopback>
                     {% else %}
                     <GigabitEthernet>
                     {% endif %}
-                        {{ update_source.id }}
-                    {%if update_source.loopback %}
+                        {{ neighbor.update_source.id }}
+                    {%if neighbor.update_source.loopback %}
                     </Loopback>
                     {% else %}
                     </GigabitEthernet>
