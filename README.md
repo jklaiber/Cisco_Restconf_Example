@@ -46,7 +46,8 @@ def parseXml(self, input_xml: dict):
     return output_xml
 ```
 ### restconf_helpers.py
-
+Class for getting information from the device and patch configuration onto the device.  
+  
 **patch()**  
 TODO
 ```python
@@ -82,6 +83,43 @@ def patch(self, url: str, username: str, password: str,
     return response.text
 ```
 ### configuration.py
+
+**load_devices()**  
+TODO
+```python
+def load_devices() -> List[dict]:
+    with open('device_infos.yaml', 'r') as host_file:
+        hosts = yaml.load(host_file.read(), Loader=yaml.FullLoader)
+        return hosts
+```
+**get_hostname()**  
+TODO
+```python
+def get_hostname(host: dict) -> str:
+    response = restconf_helpers.RestconfRequestHelper().get(
+        url=f'https://{host["connection_address"]}/restconf/data/Cisco-IOS-XE-native:native/hostname/',
+        username=host['username'],
+        password=host['password'])
+    return response
+
+```
+**patch_configuration()**  
+TODO
+```python
+def patch_configuration(host: dict) -> str:
+    rendering_data = rendering.RenderJinjaTemplate().rendering(host)
+    print(rendering_data)
+    rendered_xml_data = rendering.XmlParser().parseXml(rendering_data)
+
+    print(rendered_xml_data)
+    response = restconf_helpers.RestconfRequestHelper().patch(
+        url=f'https://{host["connection_address"]}/restconf/data/Cisco-IOS-XE-native:native/',
+        username=host['username'],
+        password=host['password'],
+        data=rendered_xml_data)
+    return response
+```
+
 
 
 # Contributors
