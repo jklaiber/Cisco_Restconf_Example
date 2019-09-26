@@ -66,10 +66,10 @@ def get_hostname(host: dict) -> str:
 
 ```
 **patch_configuration()**  
-1. Rendering the given host dict (which includes the configuration information) into a correct XML format.
-2. Render XML into one single lined string (because Cisco the devices only support this format)
-3. Configure the device with sending the information via HTTP PATCH request to the REST API.
-4. Calling the REST API the HTTP respone will be returned.
+- Rendering the given host dict (which includes the configuration information) into a correct XML format.
+- Render XML into one single lined string (because Cisco the devices only support this format)
+- Configure the device with sending the information via HTTP PATCH request to the REST API.
+- Calling the REST API the HTTP respone will be returned.
 ```python
 def patch_configuration(host: dict) -> str:
     rendering_data = rendering.RenderJinjaTemplate().rendering(host)
