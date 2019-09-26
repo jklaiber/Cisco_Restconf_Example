@@ -24,7 +24,7 @@ $ pip3 install -r requirements.txt
 4. When you need an additional router then you can also do that (please consider the yaml syntax)
 5. Run & enjoy it.
 
-You can find an example how you can configure two devices at the end of this document.
+You can find an example of `device_infos.yaml` at the end of this document.
 
 **Run**: `python3 configuration.py`
 
