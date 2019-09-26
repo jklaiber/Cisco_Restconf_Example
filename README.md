@@ -90,7 +90,7 @@ support one single line string and no correct formatted XML.
 
 
 **rendering()**  
-Rendering function for jinja2 which creates an own environment. In the environment we can open the template folder and render the template with the config data we got in the config_data argument.
+Rendering function for jinja2 which creates an own environment. In the environment open the template folder and render the template with the given infromation.
 ```python
 def rendering(self, config_data: dict):        
     env = Environment(loader = FileSystemLoader('./template'),
