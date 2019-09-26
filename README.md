@@ -66,7 +66,7 @@ def get_hostname(host: dict) -> str:
 
 ```
 **patch_configuration()**  
-First rendering the given host dict (with the host configuration information) into a correct XML format.
+First rendering the given host dict (which includes the configuration information) into a correct XML format.
 Second the XML is rendered into one single lined string (because Cisco the devices need this format)
 Third configure the device with sending the information via HTTP PATCH request to the REST API.
 After calling the REST API the HTTP respone will be returned.
