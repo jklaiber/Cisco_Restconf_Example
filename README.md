@@ -205,6 +205,13 @@ Returns:
 - Julian Klaiber (<julian.klaiber@hsr.ch>)
 - Severin Dellsperger (<severin.dellsperger@hsr.ch>)
 
+# Motivation behind the solution
+We decided to use a HTTP PATCH method in our application, which has following advantages:
+- The application design is uncomplicated & clear. Adjustments in the configuration have to be made in just one file. It's also possible to configure several hosts. So every configuration of all hosts can be made by just adding or removing information to one single file.
+- The use of the PATCH method creates as few overhead as possible. Only changes in the device configuration are updated. It also simplifies the whole application code, just one method has to be called to do one or more changes in the configuration of the device.
+- RFC 8040 mentions following problem: If multiple update request are send to an RESTCONF interface, the device respond with a HTTP status 409 changes couldn't be written. Our solution only needs to use one PATCH request per device, so our solution bypasses the mentioned problem. 
+
+
 # Example
 Here is an example how do you can configure two different devices:
 ```
