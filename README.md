@@ -1,6 +1,6 @@
 # CldInf_Lab2
 ## What the tool accomplish
-The application automatically configures features on Cisco Devices.
+The application automatically configures features on Cisco devices.
 Following configurations are supported:
 - Hostname
 - Interface
@@ -23,100 +23,7 @@ $ pip3 install -r requirements.txt
 3. You can add additional bgp neighbors or ospf areas and also interfaces
 4. When you need a additional router then you can also do that (please consider the yaml sintax)
 
-Here is an example how do you can configure two different devices:
-```
-- hostname: RT-6
-  username: python
-  password: cisco
-  connection_address: 10.3.255.106
-  interfaces:
-    - name: 1
-      ip: 10.3.255.106
-      mask: 255.255.255.0
-      loopback: false
-    - name: 0
-      ip: 6.6.6.6
-      mask: 255.255.255.255
-      loopback: true
-    - name: 1
-      ip: 192.168.6.1
-      mask: 255.255.255.0
-      loopback: true
-  ospf: 
-    process_id: 1
-    areas:
-    - area_id: 0
-      networks:
-      - 6.6.6.6: 0.0.0.0
-      - 192.168.6.0: 0.0.0.255
-      - 10.3.255.0: 0.0.0.255
-    router_id: 6.6.6.6
-    passive_interfaces:
-    - lo1
-  bgp:
-    as_number: 6
-    networks:
-    - 192.168.6.0: 255.255.255.0 
-    neighbors:
-    - address: 20.20.20.20
-      remote_as: 20
-      multihop_count: 2
-      update_source:
-        loopback: true
-        id: 0
-    - address: 7.7.7.7
-      remote_as: 7
-      multihop_count: 3
-      update_source:
-        loopback: true
-        id: 0
-- hostname: RT-7
-  username: python
-  password: cisco
-  connection_address: 10.3.255.107
-  interfaces:
-    - name: 1
-      ip: 10.3.255.107
-      mask: 255.255.255.0
-      loopback: false
-    - name: 0
-      ip: 7.7.7.7
-      mask: 255.255.255.255
-      loopback: true
-    - name: 1
-      ip: 192.168.7.1
-      mask: 255.255.255.0
-      loopback: true
-  ospf: 
-    process_id: 1
-    areas:
-    - area_id: 0
-      networks:
-      - 7.7.7.7: 0.0.0.0
-      - 192.168.7.0: 0.0.0.255
-      - 10.3.255.0: 0.0.0.255
-    router_id: 7.7.7.7
-    passive_interfaces:
-    - lo1
-  bgp:
-    as_number: 7
-    networks:
-    - 192.168.7.0: 255.255.255.0 
-    neighbors:
-    - address: 6.6.6.6
-      remote_as: 6
-      multihop_count: 3
-      update_source:
-        loopback: true
-        id: 0
-    - address: 20.20.20.20
-      remote_as: 20
-      multihop_count: 2
-      update_source:
-        loopback: true
-        id: 0
-```
-
+You can find an example how you can configure two devices at the end of this document.
 
 **Run**: `python3 configuration.py`
 
@@ -221,8 +128,101 @@ def patch_configuration(host: dict) -> str:
     return response
 ```
 
-
-
 # Contributors
 - Julian Klaiber (<julian.klaiber@hsr.ch>)
 - Severin Dellsperger (<severin.dellsperger@hsr.ch>)
+
+# Example
+Here is an example how do you can configure two different devices:
+```
+- hostname: RT-6
+  username: python
+  password: cisco
+  connection_address: 10.3.255.106
+  interfaces:
+    - name: 1
+      ip: 10.3.255.106
+      mask: 255.255.255.0
+      loopback: false
+    - name: 0
+      ip: 6.6.6.6
+      mask: 255.255.255.255
+      loopback: true
+    - name: 1
+      ip: 192.168.6.1
+      mask: 255.255.255.0
+      loopback: true
+  ospf: 
+    process_id: 1
+    areas:
+    - area_id: 0
+      networks:
+      - 6.6.6.6: 0.0.0.0
+      - 192.168.6.0: 0.0.0.255
+      - 10.3.255.0: 0.0.0.255
+    router_id: 6.6.6.6
+    passive_interfaces:
+    - lo1
+  bgp:
+    as_number: 6
+    networks:
+    - 192.168.6.0: 255.255.255.0 
+    neighbors:
+    - address: 20.20.20.20
+      remote_as: 20
+      multihop_count: 2
+      update_source:
+        loopback: true
+        id: 0
+    - address: 7.7.7.7
+      remote_as: 7
+      multihop_count: 3
+      update_source:
+        loopback: true
+        id: 0
+- hostname: RT-7
+  username: python
+  password: cisco
+  connection_address: 10.3.255.107
+  interfaces:
+    - name: 1
+      ip: 10.3.255.107
+      mask: 255.255.255.0
+      loopback: false
+    - name: 0
+      ip: 7.7.7.7
+      mask: 255.255.255.255
+      loopback: true
+    - name: 1
+      ip: 192.168.7.1
+      mask: 255.255.255.0
+      loopback: true
+  ospf: 
+    process_id: 1
+    areas:
+    - area_id: 0
+      networks:
+      - 7.7.7.7: 0.0.0.0
+      - 192.168.7.0: 0.0.0.255
+      - 10.3.255.0: 0.0.0.255
+    router_id: 7.7.7.7
+    passive_interfaces:
+    - lo1
+  bgp:
+    as_number: 7
+    networks:
+    - 192.168.7.0: 255.255.255.0 
+    neighbors:
+    - address: 6.6.6.6
+      remote_as: 6
+      multihop_count: 3
+      update_source:
+        loopback: true
+        id: 0
+    - address: 20.20.20.20
+      remote_as: 20
+      multihop_count: 2
+      update_source:
+        loopback: true
+        id: 0
+```
