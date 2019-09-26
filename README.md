@@ -115,17 +115,18 @@ Class for getting information from the device and patch configuration onto the d
 
 **get()**
 Executes a get request to the specified url and adds RESTCONF specific headers.
-Raises an exception if the request fails.
-Parameters:
-            url: url which should be requested
-            username: the username for the authentication
-            password: the password for the authentication
-            restconf_format: which restconf headers should be set. (default RestconfFormat.XML)
-            headers: which additional headers should be set (default None)
-            kwargs: additional parameters for the request
+Raises an exception if the request fails.    
 
-        Returns:
-            str: The text of the response
+Parameters:
+- url: url which should be requested
+- username: the username for the authentication
+- password: the password for the authentication
+- restconf_format: which restconf headers should be set. (default RestconfFormat.XML)
+- headers: which additional headers should be set (default None)
+- kwargs: additional parameters for the request
+
+Returns:  
+- str: The text of the response
 
 ```python
 def get(self, url: str, username: str, password: str,
@@ -147,16 +148,18 @@ def get(self, url: str, username: str, password: str,
   
 **patch()**  
  Executes a patch to the specified url and updates the configuration of the device.
- Raises an exception if the request fail        
+ Raises an exception if the request fail      
+       
 Parameters:
-    url: url which should be requested
-    username: the username for the authentication
-    password: the password for the authentication
-    restconf_format: which restconf headers should be set. (default RestconfFormat.XML)
-    headers: which additional headers should be set (default None)
-    kwargs: additional parameters for the reques        
+- url: url which should be requested
+- username: the username for the authentication
+- password: the password for the authentication
+- restconf_format: which restconf headers should be set. (default RestconfFormat.XML)
+- headers: which additional headers should be set (default None)
+- kwargs: additional parameters for the reques  
+
 Returns:
-    str: The text of the response
+- str: The text of the response
 
 ```python
 def patch(self, url: str, username: str, password: str,
@@ -180,12 +183,14 @@ def patch(self, url: str, username: str, password: str,
 ```
 
 **get_headers()**
-Adds restconf specific headers to a dict
+Adds restconf specific headers to a dict    
+
 Parameters:
-            restconf: which restconf headers should be set
-            headers: which additional headers should be set
-        Returns:
-            dict: The header information
+- restconf: which restconf headers should be set
+- headers: which additional headers should be set
+
+Returns:
+- dict: The header information
 ```python            
     def get_headers(self, format: RestconfFormat, headers: Optional[Dict[str, str]]) -> Dict[str, str]:
         
