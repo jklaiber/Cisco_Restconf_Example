@@ -1,7 +1,7 @@
 # CldInf_Lab2
 ## What the tool accomplish
 The application automatically configures features on Cisco devices.
-Following configurations are supported:
+Following configuration changes are supported:
 - Hostname
 - Interface
 - OSPF
@@ -19,21 +19,78 @@ $ pip3 install -r requirements.txt
 
 ## Work with it
 1. Open the `device_infos.yaml` file
-2. Edit the configuration to your needs
+2. Edit the configuration to meet your needs
 3. You can add additional bgp neighbors or ospf areas and also interfaces
-4. When you need a additional router then you can also do that (please consider the yaml sintax)
+4. When you need an additional router then you can also do that (please consider the yaml syntax)
+5. Run & enjoy it.
 
 You can find an example how you can configure two devices at the end of this document.
 
 **Run**: `python3 configuration.py`
 
 ## Code Explanation
+
+### configuration.py
+
+**main**
+Starting Point:
+The main function loads the devices and executes a HTTP PATCH request for each device. 
+```python
+def main():
+    devices = load_devices() 
+    for device in devices:
+        logger.info
+        logger.info(f'Device Information: {device}')
+        logger.info(f'Getting information for device {device["hostname"]}')
+        response = patch_configuration(device)
+        logger.info(f'Response answer: {response}')
+```
+
+**load_devices()**  
+Read the input of the configuration file ```device_infos.yaml``` and return a list of dicts including the config information. 
+```python
+def load_devices() -> List[dict]:
+    with open('device_infos.yaml', 'r') as host_file:
+        hosts = yaml.load(host_file.read(), Loader=yaml.FullLoader)
+        return hosts
+```
+**get_hostname()**  
+Request the hostname of a given host with a HTTP GET request and return it.
+```python
+def get_hostname(host: dict) -> str:
+    response = restconf_helpers.RestconfRequestHelper().get(
+        url=f'https://{host["connection_address"]}/restconf/data/Cisco-IOS-XE-native:native/hostname/',
+        username=host['username'],
+        password=host['password'])
+    return response
+
+```
+**patch_configuration()**  
+First rendering the given host dict (with the host configuration information)into a correct XML format.
+Second the XML is rendered into one single lined string (because Cisco the devices need this format)
+Third configure the device with sending the information via HTTP PATCH request to the REST API.
+After calling the REST API the HTTP respone will be returned.
+```python
+def patch_configuration(host: dict) -> str:
+    rendering_data = rendering.RenderJinjaTemplate().rendering(host)
+    rendered_xml_data = rendering.XmlParser().parseXml(rendering_data)
+
+    response = restconf_helpers.RestconfRequestHelper().patch(
+        url=f'https://{host["connection_address"]}/restconf/data/Cisco-IOS-XE-native:native/',
+        username=host['username'],
+        password=host['password'],
+        data=rendered_xml_data)
+    return response
+```
+
 ### rendering.py
-Class for render the jinja2 template and the xml. 
-We have to render the xml because cisco devices can only handle a single one line string and unfortunately no formatted xml.
+Class for rendering the given jinja2 template and the XML. 
+Rendering XML is essential because Cisco devices only
+support one single line string and no correct formatted XML.
+
 
 **rendering()**  
-Rendering method for jinja2 which will make a own environment. In the environment we can open the template folder and render the template with the config data we become from the configuration.py
+Rendering function for jinja2 which creates an own environment. In the environment we can open the template folder and render the template with the config data we got in the config_data argument.
 ```python
 def rendering(self, config_data: dict):        
     env = Environment(loader = FileSystemLoader('./template'),
@@ -45,7 +102,7 @@ def rendering(self, config_data: dict):
     return rendereddata
 ```
 **parseXml()**  
-This method is used to parse the xml from a formated file into a single line.
+Parse a correct formatted XML file into a single line.
 ```python
 def parseXml(self, input_xml: dict):
     _dom = dom.parseString(input_xml)
@@ -55,28 +112,59 @@ def parseXml(self, input_xml: dict):
 ```
 ### restconf_helpers.py
 Class for getting information from the device and patch configuration onto the device.  
+
+**get()**
+Executes a get request to the specified url and adds RESTCONF specific headers.
+Raises an exception if the request fails.
+Parameters:
+            url: url which should be requested
+            username: the username for the authentication
+            password: the password for the authentication
+            restconf_format: which restconf headers should be set. (default RestconfFormat.XML)
+            headers: which additional headers should be set (default None)
+            kwargs: additional parameters for the request
+
+        Returns:
+            str: The text of the response
+
+```python
+def get(self, url: str, username: str, password: str,
+            restconf_format: Optional[RestconfFormat] = RestconfFormat.XML,
+            headers: Optional[Dict[str, str]] = None,
+            **kwargs: Dict[Any, Any]) -> str:
+
+        logger.debug(f'GET request to {url}')
+        request_headers = self.get_headers(restconf_format, headers)
+        response = requests.request(method='GET', auth=(username, password),
+                                    headers=request_headers,
+                                    url=url,
+                                    verify=False,
+                                    **kwargs)
+        logger.debug(f'Got response from {url} with code {response.status_code} and content \n {response.text}')
+        response.raise_for_status()
+        return response.text
+```
   
 **patch()**  
-TODO
+ Executes a patch to the specified url and updates the configuration of the device.
+ Raises an exception if the request fail        
+Parameters:
+    url: url which should be requested
+    username: the username for the authentication
+    password: the password for the authentication
+    restconf_format: which restconf headers should be set. (default RestconfFormat.XML)
+    headers: which additional headers should be set (default None)
+    kwargs: additional parameters for the reques        
+Returns:
+    str: The text of the response
+
 ```python
 def patch(self, url: str, username: str, password: str,
     data: str,
     restconf_format: Optional[RestconfFormat] = RestconfFormat.XML,
     headers: Optional[Dict[str, str]] = None,
     **kwargs: Dict[Any, Any]) -> str:
-            
-    """Executes a patch to the specified url updates the config of device.
-    Raises an exception if the request fail        
-    Parameters:
-        url: url which should be requested
-        username: the username for the authentication
-        password: the password for the authentication
-        restconf_format: which restconf headers should be set. (default RestconfFormat.XML)
-        headers: which additional headers should be set (default None)
-        kwargs: additional parameters for the reques        
-    Returns:
-        str: The text of the response
-    """
+                
     logger.debug(f'PATCH request to {url}')
     request_headers = self.get_headers(restconf_format, headers)
     response = requests.request(method='PATCH',
@@ -90,42 +178,22 @@ def patch(self, url: str, username: str, password: str,
     response.raise_for_status()
     return response.text
 ```
-### configuration.py
 
-**load_devices()**  
-TODO
-```python
-def load_devices() -> List[dict]:
-    with open('device_infos.yaml', 'r') as host_file:
-        hosts = yaml.load(host_file.read(), Loader=yaml.FullLoader)
-        return hosts
-```
-**get_hostname()**  
-TODO
-```python
-def get_hostname(host: dict) -> str:
-    response = restconf_helpers.RestconfRequestHelper().get(
-        url=f'https://{host["connection_address"]}/restconf/data/Cisco-IOS-XE-native:native/hostname/',
-        username=host['username'],
-        password=host['password'])
-    return response
-
-```
-**patch_configuration()**  
-TODO
-```python
-def patch_configuration(host: dict) -> str:
-    rendering_data = rendering.RenderJinjaTemplate().rendering(host)
-    print(rendering_data)
-    rendered_xml_data = rendering.XmlParser().parseXml(rendering_data)
-
-    print(rendered_xml_data)
-    response = restconf_helpers.RestconfRequestHelper().patch(
-        url=f'https://{host["connection_address"]}/restconf/data/Cisco-IOS-XE-native:native/',
-        username=host['username'],
-        password=host['password'],
-        data=rendered_xml_data)
-    return response
+**get_headers()**
+Adds restconf specific headers to a dict
+Parameters:
+            restconf: which restconf headers should be set
+            headers: which additional headers should be set
+        Returns:
+            dict: The header information
+```python            
+    def get_headers(self, format: RestconfFormat, headers: Optional[Dict[str, str]]) -> Dict[str, str]:
+        
+        
+        restconf_headers = self.headers_json if format == RestconfFormat.JSON else self.headers_xml
+        if headers and isinstance(headers, dict):
+            return dict(headers, **restconf_headers)
+        return dict(restconf_headers)
 ```
 
 # Contributors

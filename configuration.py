@@ -48,7 +48,7 @@ def main():
         logger.info(f'Device Information: {device}')
         logger.info(f'Getting information for device {device["hostname"]}')
         response = patch_configuration(device)
-        print(response)
+        logger.info(f'Response answer: {response}')
 
 if __name__ == '__main__':
     init_logger()
