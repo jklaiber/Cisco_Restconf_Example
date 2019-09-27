@@ -45,6 +45,7 @@ class RestconfRequestHelper:
                                     url=url,
                                     verify=False,
                                     **kwargs)
+
         logger.debug(f'Got response from {url} with code {response.status_code} and content \n {response.text}')
         response.raise_for_status()
         return response.text
@@ -53,7 +54,7 @@ class RestconfRequestHelper:
             data: str,
             restconf_format: Optional[RestconfFormat] = RestconfFormat.XML,
             headers: Optional[Dict[str, str]] = None,
-            **kwargs: Dict[Any, Any]) -> str:
+            **kwargs: Dict[Any, Any]) -> int:
             
         """Executes a patch to the specified url updates the config of device.
         Raises an exception if the request fail        
@@ -65,7 +66,7 @@ class RestconfRequestHelper:
             headers: which additional headers should be set (default None)
             kwargs: additional parameters for the reques        
         Returns:
-            str: The text of the response
+            int: The response code
         """
         logger.debug(f'PATCH request to {url}')
         request_headers = self.get_headers(restconf_format, headers)
@@ -76,9 +77,12 @@ class RestconfRequestHelper:
                                     url=url,
                                     verify=False,
                                     **kwargs)
-        logger.debug(f'Got response from {url} with code {response.status_code} and content \n {response.text}')
+        if not response.text:
+            logger.debug(f'Got response from {url} with code {response.status_code}')
+        else:
+            logger.debug(f'Got response from {url} with code {response.status_code} and content \n {response.text}')
         response.raise_for_status()
-        return response.text
+        return response.status_code
     
     def get_headers(self, format: RestconfFormat, headers: Optional[Dict[str, str]]) -> Dict[str, str]:
         """Adds restconf specific headers to a dict

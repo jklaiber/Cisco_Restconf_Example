@@ -4,7 +4,7 @@ import xml.dom.minidom as dom
 
 class RenderJinjaTemplate:
 
-    def rendering(self, config_data: dict):        
+    def rendering(self, config_data: dict) -> str:        
         env = Environment(loader = FileSystemLoader('./template'),
             trim_blocks=True,
             lstrip_blocks=True
@@ -15,7 +15,7 @@ class RenderJinjaTemplate:
     
 class XmlParser:
 
-    def parseXml(self, input_xml: dict):
+    def parseXml(self, input_xml: str) -> str:
         _dom = dom.parseString(input_xml)
         output_xml = ''.join([line.strip() for line in _dom.toxml().splitlines()])
         _dom.unlink()
