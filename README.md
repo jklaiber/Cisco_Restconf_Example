@@ -50,7 +50,7 @@ def main():
 ```
 
 **load_devices()**  
-Read the input of the configuration file ```device_infos.yaml``` and return a list of dicts including the config information. 
+Read the input of the configuration file ```device_infos.yaml``` and return a list of dicts. Each dictionary includes the devices information. 
 
 Returns:  
 - List[dict]: A List of dictionaries which includes the config infos about each device
@@ -251,9 +251,9 @@ Returns:
 
 # Motivation behind the solution
 We decided to use a HTTP PATCH method in our application, which has following advantages:
-- The application design is uncomplicated & clear. Adjustments in the configuration have to be made in just one file. It's also possible to configure several hosts. So every configuration of all hosts can be made by just adding or removing information to one single file. If the  
-- The use of the PATCH method creates as few overhead as possible. Only changes in the device configuration are updated. It also simplifies the whole application code, just one method has to be called to do one or more changes in the configuration of the device.
-- RFC 8040 mentions following problem: If multiple update request or too big requests are send to an RESTCONF interface, the device respond with a HTTP status 409 changes couldn't be written. Our solution only needs to use one PATCH request per device, so our solution should bypass the mentioned problem. If it should occur anyways, a retry is executed automatically  
+- The application design is uncomplicated & clear. Adjustments in the configuration have to be made in just one file. It's also possible to configure several hosts. So every configuration can be made by simply adding or removing information to one single file. Therefore our solution is well structured and can be fast adoppted to new devices and functions.
+- The use of the PATCH method creates as few overhead as possible. Only changes in the device configuration are updated. It also simplifies the whole application code, just one method has to be called to do one or more changes in the configuration of the device. This advantage was also noticeable during testing, writing the entire configuration took longer than just changing individual sub-configurations.
+- RFC 8040 mentions following problem: If multiple update request or too big requests are send to an RESTCONF interface, the device respond with a HTTP status 409 changes couldn't be written. Our solution only needs to use one PATCH request per device, so our script should bypass the mentioned problem. If it should occur anyways, a retry is executed automatically.
 
 
 # Example
