@@ -32,7 +32,7 @@ You can find an example of `device_infos.yaml` at the end of this document.
 
 ### configuration.py
 
-**main**
+**main**  
 Starting Point:
 Load the devices and execute a HTTP PATCH request for each device.
 Analyze response_code and decide if configuration change was successfully or not.
