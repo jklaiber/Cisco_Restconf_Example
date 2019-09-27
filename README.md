@@ -32,8 +32,7 @@ You can find an example of `device_infos.yaml` at the end of this document.
 
 ### configuration.py
 
-**main**  
-Starting Point:
+**main - Starting Point**  
 Load the devices and execute a HTTP PATCH request for each device.
 Analyze response_code and decide if configuration change was successfully or not.
 Successfull Responses are 200, 201 & 204   (more information: https://www.cisco.com/c/en/us/td/docs/ios-xml/ios/prog/configuration/166/b_166_programmability_cg/restconf_prog_int.html) 
