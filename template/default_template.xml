@@ -59,8 +59,8 @@
             {% for network in bgp.networks %}
             {% for ip,mask in network.items() %}
             <network>
-                <number>192.168.6.0</number>
-                <mask>255.255.255.0</mask>
+                <number>{{ ip }}</number>
+                <mask>{{ mask }}</mask>
             </network>
             {% endfor %}
             {% endfor %}
