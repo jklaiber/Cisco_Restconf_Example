@@ -1,4 +1,4 @@
-# CldInf_Lab2
+# Cisco Restconf Example
 ## What the tool accomplish
 The application automatically configures features on Cisco devices.
 Following configuration changes are supported:
